@@ -1,0 +1,17 @@
+{
+  "name": "prompt-flow",
+  "version": "1.0.0",
+  "description": "A Mock API template builder",
+  "private": "true",
+  "author": "AzCodes",
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter client dev\" \"pnpm --filter server start:dev\"",
+    "client": "pnpm --filter client dev",
+    "server": "pnpm --filter server start:dev",
+    "build": "pnpm --filter client build && pnpm --filter server build"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "license": "MIT"
+}
