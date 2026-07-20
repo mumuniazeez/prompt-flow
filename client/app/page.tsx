@@ -11,13 +11,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Ai,
   ArrowRightFreeIcons,
+  Bolt,
+  Chart,
   Check,
+  Code,
+  Layer,
+  Shield,
   Sparkle,
   Sparkles,
   Terminal,
 } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { HugeiconsIcon, IconSvgElement } from "@hugeicons/react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -27,6 +33,12 @@ interface ExampleBlueprint {
   path: string;
   schemaBlueprint: string;
   simulatedSchema: string;
+}
+
+interface Feature {
+  title: string;
+  description: string;
+  icon: IconSvgElement;
 }
 
 const exampleBlueprint: ExampleBlueprint[] = [
@@ -87,6 +99,45 @@ const exampleBlueprint: ExampleBlueprint[] = [
   },
 ];
 
+const features: Feature[] = [
+  {
+    title: "AI Semantic Engine",
+    description:
+      "No more static mock DB configurations. The engine translates prompt directives and schema shapes into logical, cohesive responses.",
+    icon: Ai,
+  },
+  {
+    title: "Real-time Traffic Inspector",
+    description:
+      "Log incoming trial payloads and check server headers instantly. Debug headers, query parameters, and latency directly from your client.",
+    icon: Chart,
+  },
+  {
+    title: "Custom Prompts & Logic",
+    description:
+      "Define bespoke server behaviors: instruct the system on how to respond if dynamic parameters are passed or headers are altered.",
+    icon: Code,
+  },
+
+  {
+    title: "Configurable Latency",
+    description:
+      "Simulate slow 3G networks or complex asynchronous background computations with adjustable latency lag from 0ms up to 5000ms.",
+    icon: Bolt,
+  },
+  {
+    title: "Client SDK Integration",
+    description:
+      "Instantly export production integration client code in `Fetch`, `cURL`, or `Python`. Drop files into your code editor without delay.",
+    icon: Layer,
+  },
+  {
+    title: "Mock Status Codes",
+    description:
+      "Test resilience handling edge-cases: instruct endpoints to reply with error states like 400 Bad Request, 401 Unauthorized, or 500 Server Crash.",
+    icon: Shield,
+  },
+];
 export default function Home() {
   const [selectedBlueprint, setSelectedBlueprint] = useState<ExampleBlueprint>(
     exampleBlueprint[0],
@@ -101,14 +152,14 @@ export default function Home() {
         <nav>
           <ul className="flex gap-x-4">
             <li>
-              <a href="#">Features</a>
+              <a href="#features">Features</a>
             </li>
             <li>
-              <a href="#">Live Demo</a>
+              <a href="#demo">Live Demo</a>
             </li>
-            <li>
+            {/* <li>
               <a href="#">Pricing</a>
-            </li>
+            </li> */}
           </ul>
         </nav>
         <div>
@@ -116,7 +167,7 @@ export default function Home() {
         </div>
       </header>
       <main>
-        <section className="flex items-center justify-center flex-col gap-y-5 py-20  border-b">
+        <section className="flex items-center justify-center flex-col gap-y-5 py-20 ">
           <Badge>
             <HugeiconsIcon icon={Sparkle} /> AI-Driven REST Architecture Mocking
           </Badge>
@@ -149,7 +200,11 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className="flex items-center justify-center flex-col gap-y-5 py-10  border-b">
+        <hr />
+        <section
+          className="flex items-center justify-center flex-col gap-y-5 py-10 w-[80%] mx-auto"
+          id="demo"
+        >
           <div className="space-y-2 text-center">
             <p className="text-sm text-primary">Live Interactive Demo</p>
 
@@ -170,6 +225,7 @@ export default function Home() {
                     <Card
                       key={idx}
                       onClick={() => setSelectedBlueprint(blueprint)}
+                      className={`${selectedBlueprint === blueprint && "bg-primary/30 border border-primary"}`}
                     >
                       <CardHeader>
                         <CardTitle>{blueprint.title}</CardTitle>
@@ -192,14 +248,14 @@ export default function Home() {
                       <Textarea
                         value={selectedBlueprint.schemaBlueprint}
                         readOnly
-                        className="max-w-400"
+                        className="max-w-100"
                       ></Textarea>
                     </div>
                   </CardContent>
                 </Card>
                 <Button className={"w-full"}>Simulate Endpoint Request</Button>
               </div>
-              <div className="space-y-3 border rounded-2xl w-150 overflow-hidden">
+              <div className="space-y-3 border rounded-2xl w-full overflow-hidden">
                 <div className="flex items-center justify-between bg-card border-b p-3">
                   <div className="flex items-center gap-x-2 rounded-t-2xl">
                     <HugeiconsIcon icon={Terminal} />{" "}
@@ -226,7 +282,64 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <hr />
+        <section
+          className="flex items-center justify-center flex-col gap-y-5 py-10 w-[80%] mx-auto"
+          id="features"
+        >
+          <div className="space-y-2 text-center">
+            <p className="text-sm text-primary">Comprehensive Suite</p>
+
+            <h3 className="text-center text-2xl font-bold">
+              Engineered for Modern Developers
+            </h3>
+            <p className="max-w-120 text-center text-xs mx-auto text-white/60">
+              PromptFlow Studio provides everything you need to unblock frontend
+              engineering workflows instantly.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 w-full">
+            {features.map((feature, idx) => (
+              <Card key={idx}>
+                <CardContent>
+                  <HugeiconsIcon icon={feature.icon} />
+                </CardContent>
+                <CardHeader>
+                  <CardTitle>{feature.title}</CardTitle>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </section>
+        <hr />
+        <section className="flex items-center justify-center flex-col gap-y-5 py-10 my-10  w-[80%] mx-auto">
+          <div className="space-y-2 text-center">
+            <h3 className="text-center text-2xl font-bold">
+              Unblock your frontend team Today.
+            </h3>
+            <p className="max-w-120 text-center text-xs mx-auto text-white/60">
+              Stop waiting for backend engineers or data migration pipelines to
+              conclude. Spin up realistic API traffic inside the browser in less
+              than 30 seconds. Sign Up For PromptFlow Studio
+            </p>
+          </div>
+          <div className="flex gap-x-3">
+            <Button className={"w-50"}>Signup</Button>
+            <Button className={"w-50"} variant={"secondary"}>
+              See Demo
+            </Button>
+          </div>
+        </section>
       </main>
+      <footer className="flex items-center justify-between px-10 py-3 border-t">
+        <p>PromptFlow &copy; 2026. All rights reserved.</p>
+        <div className="flex gap-x-3">
+          <Button variant={"link"}>Terms of Service</Button>
+          <Button variant={"link"}>Privacy Policy</Button>
+        </div>
+      </footer>
     </>
   );
 }
