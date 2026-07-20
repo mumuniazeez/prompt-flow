@@ -10,5 +10,4 @@ export class GoogleStrategy extends PassportStrategy(OAuthStrategy, 'google') {
   }
 
   //   TODO: Add JWT validation
-  validate() {}
 }
