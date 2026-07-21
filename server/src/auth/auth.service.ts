@@ -1,12 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { GoogleAuthPayloadDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
-  signUp(callbackUrl: string) {
-    if (!callbackUrl) throw new BadRequestException('callbackUrl is required');
-    return 'This is Sign Up';
+  googleCallback(
+    payload: GoogleAuthPayloadDto,
+    callbackUrl: string,
+  ): { url: string } {
+    console.log(payload);
+    if (!payload || !payload.token || !payload.user)
+      return { url: `${callbackUrl}?error=No user payload returned` };
+
+    return { url: `${callbackUrl}?access_token=${payload.token}` };
   }
 }
