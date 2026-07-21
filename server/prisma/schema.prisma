@@ -12,7 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model User{
+model User {
   id String @id @default(uuid())
 
   firstName String
@@ -20,6 +20,10 @@ model User{
 
   email String @unique
 
+  profileImage String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
