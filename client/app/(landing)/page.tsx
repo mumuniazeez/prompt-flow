@@ -25,6 +25,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, IconSvgElement } from "@hugeicons/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 interface ExampleBlueprint {
@@ -145,27 +146,6 @@ export default function Home() {
 
   return (
     <>
-      <header className="flex items-center justify-between px-10 py-3 border-b">
-        <div>
-          <h1 className="text-2xl font-bold">PromptFlow</h1>
-        </div>
-        <nav>
-          <ul className="flex gap-x-4">
-            <li>
-              <a href="#features">Features</a>
-            </li>
-            <li>
-              <a href="#demo">Live Demo</a>
-            </li>
-            {/* <li>
-              <a href="#">Pricing</a>
-            </li> */}
-          </ul>
-        </nav>
-        <div>
-          <Button>Signup</Button>
-        </div>
-      </header>
       <main>
         <section className="flex items-center justify-center flex-col gap-y-5 py-20 ">
           <Badge>
@@ -181,9 +161,11 @@ export default function Home() {
             and custom prompts.
           </p>
           <div className="flex items-center gap-x-3">
-            <Button>
-              Get Started <HugeiconsIcon icon={ArrowRightFreeIcons} />
-            </Button>
+            <Link href={"/auth"}>
+              <Button>
+                Get Started <HugeiconsIcon icon={ArrowRightFreeIcons} />
+              </Button>
+            </Link>
           </div>
           <div className="flex items-center gap-x-3">
             <p className="flex items-center text-xs">
@@ -326,20 +308,15 @@ export default function Home() {
             </p>
           </div>
           <div className="flex gap-x-3">
-            <Button className={"w-50"}>Signup</Button>
+            <Link href={"/auth"}>
+              <Button className={"w-50"}>Signup</Button>
+            </Link>
             <Button className={"w-50"} variant={"secondary"}>
               See Demo
             </Button>
           </div>
         </section>
       </main>
-      <footer className="flex items-center justify-between px-10 py-3 border-t">
-        <p>PromptFlow &copy; 2026. All rights reserved.</p>
-        <div className="flex gap-x-3">
-          <Button variant={"link"}>Terms of Service</Button>
-          <Button variant={"link"}>Privacy Policy</Button>
-        </div>
-      </footer>
     </>
   );
 }
