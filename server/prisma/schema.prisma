@@ -25,5 +25,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  projects Project[]
+
   @@map("users")
+}
+
+model Project {
+  id String @id @default(uuid())
+
+  name String
+  description String
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("projects")
 }

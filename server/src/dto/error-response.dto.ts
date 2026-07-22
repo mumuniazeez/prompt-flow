@@ -24,4 +24,18 @@ export class ErrorMessageResponseDto {
     examples: [200, 400, 401, 403, 500],
   })
   statusCode!: number;
+
+  @ApiProperty({
+    description: 'Human readable error message',
+    example: ['User not found', 'Invalid Credential'],
+    oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+  })
+  message!: string | string[];
+
+  @ApiProperty({
+    required: false,
+    description: 'Machine readable error message',
+    examples: ['NotFound', 'Unauthorized'],
+  })
+  error?: string;
 }
