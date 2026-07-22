@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UserResponseDto } from './dto';
+import { GetUser } from '../auth/decorator';
+import { JwtGuard } from '../auth/guard';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { GeneralOkResponseDto } from '../dto/general-response.dto';
 
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @ApiOperation({
+    summary: 'Get user profile',
+    description: 'Get the current logged in user profile',
+  })
+  @ApiOkResponse({
+    type: UserResponseDto,
+  })
+  @Get('me')
+  findOne(@GetUser('id') id: string) {
+    return this.userService.getMe(id);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @ApiOperation({
+    summary: 'Update user profile',
+    description: 'Update the current logged in user profile',
+  })
+  @ApiOkResponse({
+    type: UserResponseDto,
+  })
+  @Patch('me')
+  update(@GetUser('id') userId: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(userId, updateUserDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @ApiOperation({
+    summary: 'Delete user profile',
+    description: 'Delete the current logged in user profile',
+  })
+  @ApiOkResponse({
+    type: GeneralOkResponseDto,
+  })
+  @Delete('me')
+  remove(@GetUser('id') id: string) {
+    return this.userService.remove(id);
   }
 }
