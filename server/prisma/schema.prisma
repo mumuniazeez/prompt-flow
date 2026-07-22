@@ -87,7 +87,7 @@ model ResponseSchema {
   instruction  String?
 
   endpoint Endpoint?
-  field    Field[]
+  fields   Field[]
 
   @@map("responseSchemas")
 }

@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { CreateEndpointDto } from './create-endpoint.dto';
 
-export class UpdateEndpointDto extends PartialType(CreateEndpointDto) {}
+export class UpdateEndpointDto extends PartialType(
+  OmitType(CreateEndpointDto, ['projectId']),
+) {}

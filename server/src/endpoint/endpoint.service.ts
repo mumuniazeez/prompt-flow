@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEndpointDto } from './dto/create-endpoint.dto';
-import { UpdateEndpointDto } from './dto/update-endpoint.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  CreateEndpointDto,
+  EndpointResponseDto,
+  UpdateEndpointDto,
+} from './dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { GeneralOkResponseDto } from '../dto';
 
 @Injectable()
 export class EndpointService {
-  create(createEndpointDto: CreateEndpointDto) {
-    return 'This action adds a new endpoint';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(
+    createEndpointDto: CreateEndpointDto,
+  ): Promise<EndpointResponseDto> {
+    const project = await this.prisma.project.findUnique({
+      where: { id: createEndpointDto.projectId },
+    });
+    if (!project) throw new NotFoundException('Project not found');
+
+    const responseSchema = await this.prisma.responseSchema.create({});
+
+    const endpoint = await this.prisma.endpoint.create({
+      data: {
+        ...createEndpointDto,
+        responseSchemaId: responseSchema.id,
+      },
+    });
+
+    return endpoint;
   }
 
-  findAll() {
-    return `This action returns all endpoint`;
+  async findAll(projectId: string): Promise<EndpointResponseDto[]> {
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+      include: { endpoints: true },
+    });
+    if (!project) throw new NotFoundException('Project not found');
+
+    if (project.endpoints.length === 0)
+      throw new NotFoundException('No endpoint yet');
+    return project.endpoints;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} endpoint`;
+  async findOne(id: string): Promise<EndpointResponseDto> {
+    const endpoint = await this.prisma.endpoint.findUnique({ where: { id } });
+
+    if (!endpoint) throw new NotFoundException('Endpoint not found');
+
+    return endpoint;
   }
 
-  update(id: number, updateEndpointDto: UpdateEndpointDto) {
-    return `This action updates a #${id} endpoint`;
+  async update(
+    id: string,
+    updateEndpointDto: UpdateEndpointDto,
+    userId: string,
+  ): Promise<EndpointResponseDto> {
+    const endpoint = await this.prisma.endpoint.findUnique({
+      where: { id, project: { userId } },
+    });
+
+    if (!endpoint) throw new NotFoundException('Endpoint not found');
+
+    return this.prisma.endpoint.update({
+      where: { id },
+      data: { ...updateEndpointDto },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} endpoint`;
+  async remove(id: string, userId: string): Promise<GeneralOkResponseDto> {
+    const endpoint = await this.prisma.endpoint.findUnique({
+      where: { id, project: { userId } },
+    });
+
+    if (!endpoint) throw new NotFoundException('Endpoint not found');
+
+    await this.prisma.endpoint.delete({ where: { id } });
+    return { message: 'Endpoint deleted successfully' };
   }
 }
