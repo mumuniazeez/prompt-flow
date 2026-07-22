@@ -16,7 +16,7 @@ model User {
   id String @id @default(uuid())
 
   firstName String
-  lastName String
+  lastName  String
 
   email String @unique
 
@@ -33,15 +33,77 @@ model User {
 model Project {
   id String @id @default(uuid())
 
-  name String
+  name        String
   description String
 
-  userId String
-  user User @relation(fields: [userId], references: [id])
-
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  endpoints Endpoint[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("projects")
+}
+
+model Endpoint {
+  id String @id @default(uuid())
+
+  name        String
+  description String
+  method      EndpointMethod
+  route       String
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  responseSchema   ResponseSchema @relation(fields: [responseSchemaId], references: [id])
+  responseSchemaId String         @unique
+
+  @@map("endpoints")
+}
+
+model Field {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  datatype    FieldDataType
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  responseSchema   ResponseSchema @relation(fields: [responseSchemaId], references: [id])
+  responseSchemaId String
+
+  @@map("fields")
+}
+
+model ResponseSchema {
+  id String @id @default(uuid())
+
+  systemPrompt String?
+  instruction  String?
+
+  endpoint Endpoint?
+  field    Field[]
+
+  @@map("responseSchemas")
+}
+
+enum EndpointMethod {
+  GET
+  POST
+  PATCH
+  PUT
+  DELETE
+}
+
+enum FieldDataType {
+  string
+  number
+  boolean
+  object
+  array
 }

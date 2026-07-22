@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProjectResponseDto } from './dto';
+import { GeneralOkResponseDto } from '../dto';
 
 @Injectable()
 export class ProjectService {
@@ -36,11 +41,35 @@ export class ProjectService {
     return project;
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+  async update(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+    userId: string,
+  ): Promise<ProjectResponseDto> {
+    const project = await this.prisma.project.findUnique({ where: { id } });
+    if (!project) throw new NotFoundException('Project not found');
+
+    if (project.userId !== userId)
+      throw new ForbiddenException('You can not  update this project');
+
+    return this.prisma.project.update({
+      where: { id },
+      data: {
+        ...updateProjectDto,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(id: string, userId: string): Promise<GeneralOkResponseDto> {
+    const project = await this.prisma.project.findUnique({ where: { id } });
+
+    if (!project) throw new NotFoundException('Project not found');
+
+    if (project.userId !== userId)
+      throw new ForbiddenException('You can not update this project');
+
+    await this.prisma.project.delete({ where: { id } });
+
+    return { message: 'Project deleted successfully' };
   }
 }
