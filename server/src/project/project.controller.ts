@@ -34,14 +34,21 @@ export class ProjectController {
     return this.projectService.create(createProjectDto, userId);
   }
 
+  @ApiOperation({
+    summary: 'Find all project',
+    description: 'Find all project created by the current user',
+  })
+  @ApiOkResponse({
+    type: [ProjectResponseDto],
+  })
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  findAll(@GetUser('id') userId: string) {
+    return this.projectService.findAll(userId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
+    return this.projectService.findOne(id);
   }
 
   @Patch(':id')
