@@ -13,10 +13,12 @@ export class EndpointService {
 
   async create(
     createEndpointDto: CreateEndpointDto,
+    userId: string,
   ): Promise<EndpointResponseDto> {
     const project = await this.prisma.project.findUnique({
-      where: { id: createEndpointDto.projectId },
+      where: { id: createEndpointDto.projectId, userId },
     });
+
     if (!project) throw new NotFoundException('Project not found');
 
     const responseSchema = await this.prisma.responseSchema.create({});
@@ -31,9 +33,12 @@ export class EndpointService {
     return endpoint;
   }
 
-  async findAll(projectId: string): Promise<EndpointResponseDto[]> {
+  async findAll(
+    projectId: string,
+    userId: string,
+  ): Promise<EndpointResponseDto[]> {
     const project = await this.prisma.project.findUnique({
-      where: { id: projectId },
+      where: { id: projectId, userId },
       include: { endpoints: true },
     });
     if (!project) throw new NotFoundException('Project not found');
@@ -43,8 +48,10 @@ export class EndpointService {
     return project.endpoints;
   }
 
-  async findOne(id: string): Promise<EndpointResponseDto> {
-    const endpoint = await this.prisma.endpoint.findUnique({ where: { id } });
+  async findOne(id: string, userId: string): Promise<EndpointResponseDto> {
+    const endpoint = await this.prisma.endpoint.findUnique({
+      where: { id, project: { userId } },
+    });
 
     if (!endpoint) throw new NotFoundException('Endpoint not found');
 
@@ -76,6 +83,7 @@ export class EndpointService {
     if (!endpoint) throw new NotFoundException('Endpoint not found');
 
     await this.prisma.endpoint.delete({ where: { id } });
+
     return { message: 'Endpoint deleted successfully' };
   }
 }
