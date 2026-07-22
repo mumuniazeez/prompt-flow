@@ -6,17 +6,26 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { FieldService } from './field.service';
 import { CreateFieldDto, UpdateFieldDto } from './dto';
+import { JwtGuard } from '../auth/guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { GetUser } from '../auth/decorator';
 
+@ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('field')
 export class FieldController {
   constructor(private readonly fieldService: FieldService) {}
 
   @Post()
-  create(@Body() createFieldDto: CreateFieldDto) {
-    return this.fieldService.create(createFieldDto);
+  create(
+    @Body() createFieldDto: CreateFieldDto,
+    @GetUser('id') userId: string,
+  ) {
+    return this.fieldService.create(createFieldDto, userId);
   }
 
   @Get()

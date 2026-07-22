@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFieldDto } from './dto/create-field.dto';
 import { UpdateFieldDto } from './dto/update-field.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FieldService {
-  create(createFieldDto: CreateFieldDto) {
+  constructor(private readonly prisma: PrismaService) {}
+  async create(createFieldDto: CreateFieldDto, userId: string) {
+    // const endpoint =
     return 'This action adds a new field';
   }
 
