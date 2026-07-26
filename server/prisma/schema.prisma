@@ -57,40 +57,14 @@ model Endpoint {
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
 
+  responseFields Json @default("[]")
+
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-  responseSchema   ResponseSchema @relation(fields: [responseSchemaId], references: [id])
-  responseSchemaId String         @unique
 
   @@map("endpoints")
 }
 
-model Field {
-  id String @id @default(uuid())
-
-  name        String
-  description String?
-  datatype    FieldDataType
-
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  responseSchema   ResponseSchema @relation(fields: [responseSchemaId], references: [id])
-  responseSchemaId String
-
-  @@map("fields")
-}
-
-model ResponseSchema {
-  id String @id @default(uuid())
-
-  systemPrompt String?
-  instruction  String?
-
-  endpoint Endpoint?
-  fields   Field[]
-
-  @@map("responseSchemas")
-}
 
 enum EndpointMethod {
   GET

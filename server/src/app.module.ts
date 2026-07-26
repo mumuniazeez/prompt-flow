@@ -6,7 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { EndpointModule } from './endpoint/endpoint.module';
-import { FieldModule } from './field/field.module';
+import { RequestModule } from './request/request.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { FieldModule } from './field/field.module';
     UserModule,
     ProjectModule,
     EndpointModule,
-    FieldModule,
+    RequestModule,
   ],
 })
 export class AppModule {}

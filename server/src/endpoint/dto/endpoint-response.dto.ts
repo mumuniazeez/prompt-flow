@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Endpoint, EndpointMethod } from '../../../generated/prisma';
+import { FieldDto } from './create-endpoint.dto';
 
 export class EndpointResponseDto implements Endpoint {
   @ApiProperty({
@@ -36,7 +37,8 @@ export class EndpointResponseDto implements Endpoint {
   })
   updatedAt!: Date;
   @ApiProperty({
-    description: 'id of the response scheme',
+    description: 'the last time the endpoint was updated',
+    type: [FieldDto],
   })
-  responseSchemaId!: string;
+  responseFields: any;
 }

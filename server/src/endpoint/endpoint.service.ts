@@ -21,12 +21,9 @@ export class EndpointService {
 
     if (!project) throw new NotFoundException('Project not found');
 
-    const responseSchema = await this.prisma.responseSchema.create({});
-
     const endpoint = await this.prisma.endpoint.create({
       data: {
         ...createEndpointDto,
-        responseSchemaId: responseSchema.id,
       },
     });
 
