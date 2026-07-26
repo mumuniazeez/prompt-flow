@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   CreateEndpointDto,
   EndpointResponseDto,
@@ -16,10 +20,26 @@ export class EndpointService {
     userId: string,
   ): Promise<EndpointResponseDto> {
     const project = await this.prisma.project.findUnique({
-      where: { id: createEndpointDto.projectId, userId },
+      where: {
+        id: createEndpointDto.projectId,
+        userId,
+      },
+      include: {
+        endpoints: {
+          where: {
+            method: createEndpointDto.method,
+            route: createEndpointDto.route,
+          },
+        },
+      },
     });
 
     if (!project) throw new NotFoundException('Project not found');
+
+    if (project.endpoints.length !== 0)
+      throw new ConflictException(
+        `"${createEndpointDto.method} ${createEndpointDto.route} already exist`,
+      );
 
     const endpoint = await this.prisma.endpoint.create({
       data: {
@@ -65,6 +85,20 @@ export class EndpointService {
     });
 
     if (!endpoint) throw new NotFoundException('Endpoint not found');
+
+    const endpointAlreadyExist = await this.prisma.endpoint.findFirst({
+      where: {
+        method: updateEndpointDto.method,
+        route: updateEndpointDto.route,
+        projectId: endpoint.projectId,
+      },
+      select: {},
+    });
+
+    if (endpointAlreadyExist)
+      throw new ConflictException(
+        `"${updateEndpointDto.method} ${updateEndpointDto.route} already exist`,
+      );
 
     return this.prisma.endpoint.update({
       where: { id },

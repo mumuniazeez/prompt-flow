@@ -26,13 +26,7 @@ export class EndpointController {
     summary: 'Create a new endpoint',
     description: 'Create a new endpoint under a project',
   })
-  @ApiParam({
-    name: 'projectId',
-    description: 'The id of the project this endpoint is under',
-    required: true,
-    type: 'string',
-  })
-  @Post(':projectId')
+  @Post()
   create(
     @Body() createEndpointDto: CreateEndpointDto,
     @GetUser('id') userId: string,
