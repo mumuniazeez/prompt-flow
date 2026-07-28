@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
+import "dotenv/config";
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:4000/:path*",
+        destination: `${process.env.VITE_API_URL}/:path*`,
       },
     ];
   },
