@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -13,8 +14,10 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { GetUser } from '../auth/decorator';
 import { ProjectResponseDto } from './dto';
+import { JwtGuard } from '../auth/guard';
 
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}

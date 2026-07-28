@@ -85,7 +85,7 @@ export class CreateEndpointDto implements Partial<Endpoint> {
     type: [FieldDto],
     description: 'Response fields in the endpoint',
   })
-  @IsJSON()
+  // @IsJSON()
   @IsObject({ each: true })
   @Type(() => FieldDto)
   responseFields!: any;

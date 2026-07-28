@@ -1,4 +1,11 @@
-import { All, Controller, Param, ParseUUIDPipe, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { RequestService } from './request.service';
 import type { Request } from 'express';
 
@@ -6,8 +13,9 @@ import type { Request } from 'express';
 export class RequestController {
   constructor(private readonly requestService: RequestService) {}
 
-  @All(':projectId/:endpointId')
-  async getResponse(
+  @Get(':projectId/:endpointId')
+  @Post(':projectId/:endpointId')
+  async getResponse_(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Param('endpointId', ParseUUIDPipe) endpointId: string,
     @Req() req: Request,

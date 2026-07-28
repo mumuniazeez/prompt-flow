@@ -69,9 +69,7 @@ model Endpoint {
 enum EndpointMethod {
   GET
   POST
-  PATCH
-  PUT
-  DELETE
+
 }
 
 enum FieldDataType {

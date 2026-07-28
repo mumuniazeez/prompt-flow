@@ -61,7 +61,7 @@ export class EndpointService {
     if (!project) throw new NotFoundException('Project not found');
 
     if (project.endpoints.length === 0)
-      throw new NotFoundException('No endpoint yet');
+      throw new NotFoundException('No endpoints yet');
     return project.endpoints;
   }
 
