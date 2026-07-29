@@ -2,7 +2,7 @@ import { defineConfig } from "@hey-api/openapi-ts";
 import "dotenv/config";
 
 export default defineConfig({
-  input: `${process.env.VITE_APP_URL}/api/docs-json`, // sign up at app.heyapi.dev
+  input: `${process.env.VITE_API_URL}/docs-json`, // sign up at app.heyapi.dev
   output: "promptflow-api",
   plugins: [
     "@hey-api/typescript",

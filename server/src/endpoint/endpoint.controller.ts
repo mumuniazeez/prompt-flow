@@ -13,8 +13,15 @@ import { EndpointService } from './endpoint.service';
 import { CreateEndpointDto } from './dto/create-endpoint.dto';
 import { UpdateEndpointDto } from './dto/update-endpoint.dto';
 import { JwtGuard } from '../auth/guard';
-import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+} from '@nestjs/swagger';
 import { GetUser } from '../auth/decorator';
+import { EndpointResponseDto } from './dto';
+import { GeneralOkResponseDto } from '../dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
@@ -22,6 +29,9 @@ import { GetUser } from '../auth/decorator';
 export class EndpointController {
   constructor(private readonly endpointService: EndpointService) {}
 
+  @ApiOkResponse({
+    type: EndpointResponseDto,
+  })
   @ApiOperation({
     summary: 'Create a new endpoint',
     description: 'Create a new endpoint under a project',
@@ -34,6 +44,9 @@ export class EndpointController {
     return this.endpointService.create(createEndpointDto, userId);
   }
 
+  @ApiOkResponse({
+    type: [EndpointResponseDto],
+  })
   @ApiOperation({
     summary: 'Find all endpoints',
     description: 'Find all endpoints under a project',
@@ -52,6 +65,9 @@ export class EndpointController {
     return this.endpointService.findAll(projectId, userId);
   }
 
+  @ApiOkResponse({
+    type: EndpointResponseDto,
+  })
   @ApiOperation({
     summary: 'Find one endpoints',
     description: 'Find one endpoints under a project',
@@ -61,6 +77,9 @@ export class EndpointController {
     return this.endpointService.findOne(id, userId);
   }
 
+  @ApiOkResponse({
+    type: EndpointResponseDto,
+  })
   @ApiOperation({
     summary: 'Update one endpoints',
     description: 'Update one endpoints under a project',
@@ -74,6 +93,9 @@ export class EndpointController {
     return this.endpointService.update(id, updateEndpointDto, userId);
   }
 
+  @ApiOkResponse({
+    type: GeneralOkResponseDto,
+  })
   @ApiOperation({
     summary: 'Delete one endpoints',
     description: 'Delete one endpoints under a project',
